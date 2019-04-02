@@ -66,7 +66,7 @@ int Icp::FindCorrespondence(double max_correspondence_distance) {
   std::vector<double> correspondence_distances;
 //  for (auto point : src_points_.colwise()) { This does not work with stable Egien releases
   for (size_t i = 0, nCols = static_cast<size_t>(transformed_src_points_.cols()); i < nCols; ++i) {
-    auto point = transformed_src_points_.col(i);
+    const auto &point = transformed_src_points_.col(i);
     int applicants_number =
         target_pc_knn_->RadiusSearch(point,
                                      max_correspondence_distance,
@@ -90,7 +90,7 @@ double Icp::EstimatePose() {
   }
 
   // 1. Construct source/target point matrix from select correspondences;
-  std::cout << "Iteration Begin! " << active_pt_num << std::endl;
+  // std::cout << "Iteration Begin! " << active_pt_num << std::endl; DEBUGGGGGG
   Eigen::Matrix3Xd active_src_pt = Eigen::MatrixXd::Zero(3, active_pt_num);
   Eigen::Matrix3Xd active_target_pt = Eigen::MatrixXd::Zero(3, active_pt_num);
   for (int i = 0; i < active_pt_num; ++i) {
@@ -116,7 +116,7 @@ double Icp::EstimatePose() {
           * (Eigen::Matrix3d() << 1, 0, 0, 0, 1, 0, 0, 0, covariance_VUT).finished()
           * covariance_svd.matrixU().transpose();
   Eigen::Vector3d translation_cur_iter = target_centroid - (rotation_cur_iter * src_centroid);
-  std::cout << rotation_cur_iter << std::endl << "[ " << translation_cur_iter << " ]" << std::endl;
+  // std::cout << rotation_cur_iter << std::endl << "[ " << translation_cur_iter << " ]" << std::endl; DEBUG
 
   // 4. Transform source pointcloud by using estimated R|T
   transformed_src_points_ = (rotation_cur_iter * transformed_src_points_);
