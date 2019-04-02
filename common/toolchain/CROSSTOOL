@@ -37,7 +37,7 @@ toolchain {
   linker_flag: "-lm"
   linker_flag: "-B/usr/bin/"
 
-  cxx_builtin_include_directory: "/usr/lib/clang/7.0.1/include"
+  cxx_builtin_include_directory: "/usr/lib/clang/8.0.0/include"
   cxx_builtin_include_directory: "/usr/include"
   tool_path { name: "gcov" path: "/usr/bin/gcov" }
 
