@@ -20,7 +20,7 @@ int main() {
   original_img = imread("/home/ocean/PublicCourse/homework2/chessboard/chessboard_undistorted.png", IMREAD_COLOR);
   distorted_img = homework2::distort(original_img, 0.1, 0.1);
 
-  imwrite("/home/ocean/PublicCourse/homework2/chessboard/chessboard_distorted.png", IMWRITE_PNG_STRATEGY_RLE);
+  imwrite("/home/ocean/PublicCourse/homework2/chessboard/chessboard_distorted.png", distorted_img);
 
   namedWindow("Undistorted Image");
   imshow("Undistorted Image", original_img);
