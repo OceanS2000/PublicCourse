@@ -125,7 +125,7 @@ double Icp::EstimatePose() {
 
   // 5. Update accumulated rotation_ and translation_.
   rotation_ = rotation_cur_iter * rotation_;
-  translation_ = translation_cur_iter + translation_;
+  translation_ = translation_cur_iter + rotation_cur_iter * translation_;
 
   return std::max((rotation_cur_iter - Eigen::Matrix3d::Identity()).norm(),
                   translation_cur_iter.norm());
