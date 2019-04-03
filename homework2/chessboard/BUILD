@@ -6,7 +6,7 @@ cc_binary(
     deps = [
         "@opencv//:core",
         "@opencv//:highgui",
-	"@opencv//:imgcodecs",
+        "@opencv//:imgcodecs",
     ],
 )
 
@@ -15,6 +15,7 @@ cc_binary(
     srcs = ["distortion.cc"],
     deps = [
         "@opencv//:core",
-	"@opencv//:highgui",
+        "@opencv//:highgui",
+        "@opencv//:imgcodecs",
     ],
 )
