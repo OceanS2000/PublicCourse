@@ -24,13 +24,13 @@ void SingleFrameDetector::GetGroundAndObstacles(
     std::vector<Obstacle>* obstacles) {
   CHECK(ground_points != nullptr);
   CHECK(obstacles != nullptr);
-  // TODO(you): add some code to detect the ground and put all the points insidethe ground_points.
+  // TODO(you): add some code to detect the ground and put all the points inside the ground_points.
   //  I provide some trivial code here. Please replace them with a better implementation.
   for (const Eigen::Vector3d& point : point_cloud.points) {
     if (point.z() < - 1.3) {
       // Note that the points in point_cloud are represented in a coordinate system where the origin
       // is the position of lidar. However, the output points and polygons should use global
-      // corrdinate system. This line shows how to transform between them.
+      // coordinate system. This line shows how to transform between them.
       ground_points->push_back(point_cloud.rotation * point + point_cloud.translation);
     }
   }
