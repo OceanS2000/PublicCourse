@@ -5,7 +5,7 @@ cc_library(
     hdrs = ["obstacle.h"],
     deps = [
         "//common/utils/math",
-    ]
+    ],
 )
 
 cc_library(
@@ -13,12 +13,14 @@ cc_library(
     srcs = ["single_frame_detector.cc"],
     hdrs = ["single_frame_detector.h"],
     deps = [
-	":obstacle",
+        ":obstacle",
+        "//common/utils/file:path",
+        "//common/utils/knn:knn_nanoflann",
         "//common/utils/math",
         "//common/utils/math/transform",
         "//homework2:pointcloud",
-        "@eigen//:eigen",
-        "@glog//:glog",
+        "@eigen",
+        "@glog",
     ],
 )
 
@@ -27,7 +29,7 @@ cc_library(
     srcs = ["pointcloud_viewer.cc"],
     hdrs = ["pointcloud_viewer.h"],
     deps = [
-	":obstacle",
+        ":obstacle",
         ":single_frame_detector",
         "//common/proto:cc_object_labeling_3d_proto",
         "//common/utils/display:painter_widget_base",
@@ -35,7 +37,7 @@ cc_library(
         "//common/utils/file:path",
         "//common/utils/gl/qt:context",
         "//common/utils/strings:format",
-        "@glog//:glog",
+        "@glog",
         "@qt//:qt_core",
         "@qt//:qt_widgets",
     ],
@@ -47,5 +49,16 @@ cc_binary(
     deps = [
         ":pointcloud_viewer",
         ":single_frame_detector",
+    ],
+)
+
+cc_binary(
+    name = "ground_detector",
+    srcs = ["ground_detector.cc"],
+    deps = [
+        "//common/utils/file",
+        "//homework2:pointcloud",
+        "@eigen",
+        "@glog",
     ],
 )

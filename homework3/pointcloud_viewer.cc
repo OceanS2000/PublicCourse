@@ -40,8 +40,7 @@ void PointCloudViewer::InitializeGlPainter() {
 void PointCloudViewer::keyPressEvent(QKeyEvent* event) {
   const int key = event->key();
   switch (key) {
-    case Qt::Key_N:
-      file_index_ = (++file_index_) % pointcloud_files_.size();
+    case Qt::Key_N:file_index_ = static_cast<int>((++file_index_) % pointcloud_files_.size());
       // Load pointcloud data.
       const std::string pointcloud_file = pointcloud_files_[file_index_];
       const PointCloud pointcloud_ = ReadPointCloudFromTextFile(pointcloud_file);
