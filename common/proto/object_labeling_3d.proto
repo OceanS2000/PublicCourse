@@ -26,6 +26,7 @@ message ObjectLabel {
   optional double height = 9;
 
   optional interface.geometry.Polygon polygon = 11;
+  optional double speed = 12 [default = 0.0];
 }
 
 message ObjectLabels {

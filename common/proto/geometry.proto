@@ -32,4 +32,9 @@ message Polygon {
   repeated Point3D point = 1;
 }
 
+// The general 2D vector
+message Vector2d {
+  optional double x = 1;
+  optional double y = 2;
+}
 

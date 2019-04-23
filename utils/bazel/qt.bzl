@@ -39,7 +39,7 @@ def cc_qt_library(name, srcs = [], hdrs = [], resources = [], **kwargs):
           # NOTE(yiming): On some machines (e.g., mine), /usr/bin/moc is actually moc of qt4.
           # Therefore, provide the absolute path here to make sure Qt5 moc is used.
           cmd = "/usr/bin/moc-qt5 $(location %s) -o $@ -f'%s' -nw"  \
-                  % (hdr, '%s/%s' % (PACKAGE_NAME, hdr)),
+                  % (hdr, '%s/%s' % (native.package_name(), hdr)),
       )
       addition_srcs.append(":%s" % moc_name)
 

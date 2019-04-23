@@ -3,6 +3,7 @@ syntax = "proto2";
 package interface.perception;
 
 import "common/proto/geometry.proto";
+import "common/proto/perception.proto";
 
 message EffectivePolygonInfo {
   optional string id = 1;
@@ -10,6 +11,11 @@ message EffectivePolygonInfo {
   optional double ceiling = 3;
   optional string type = 4;
   repeated interface.geometry.Point2D point = 5;
+}
+
+message TypeCount {
+  optional ObjectType type = 1;
+  optional int32 count = 2;
 }
 
 message PerceptionFrameResult {
@@ -30,6 +36,14 @@ message PerceptionFrameResult {
 
   // image file full path
   optional string image_file_path = 8;
+  
+  repeated interface.geometry.Vector2d labeled_velocity = 9;
+  repeated interface.geometry.Vector2d detected_velocity = 10;
+  optional double total_velocity_diff = 11;
+  
+  repeated TypeCount true_positive = 12;
+  repeated TypeCount label_count = 13;
+  repeated TypeCount detect_count = 14;
 }
 
 message PerceptionEvaluationResult {
@@ -41,6 +55,7 @@ message PerceptionEvaluationResult {
 
   optional double evaluation_range = 3;
 }
+
 
 message PerceptionEvaluationConfig {
   optional string scenario_name = 1;

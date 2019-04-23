@@ -1,19 +1,23 @@
-diff -u -r a/BUILD b/BUILD
---- a/BUILD	2017-09-14 12:24:28.000000000 -0700
-+++ b/BUILD	2018-01-12 17:55:32.526232537 -0800
-@@ -24,6 +24,11 @@
+diff --git a/BUILD b/BUILD
+index cacd237..4e27c62 100644
+--- a/BUILD
++++ b/BUILD
+@@ -24,6 +24,14 @@ COPTS = select({
          "-Woverloaded-virtual",
          "-Wno-sign-compare",
          "-Wno-unused-function",
 +        # PONY_CHANGE BEGIN
-+        # NOTE: added to mute some default warnings defined in our CROSSTOOL file.
++        # NOTE(yiming@): added to mute some default warnings defined in our CROSSTOOL file.
 +        "-Wno-unused-const-variable",
 +        "-Wno-unused-parameter",
++        "-Wno-enum-compare",
++        "-Wno-tautological-compare",
++        "-Wno-invalid-offsetof",
 +        # PONY_CHANGE END
      ],
  })
  
-@@ -222,6 +227,7 @@
+@@ -222,6 +230,7 @@ objc_library(
      includes = ["objectivec"],
      non_arc_srcs = ["objectivec/GPBProtocolBuffers.m"],
      visibility = ["//visibility:public"],
@@ -21,7 +25,7 @@ diff -u -r a/BUILD b/BUILD
  )
  
  RELATIVE_WELL_KNOWN_PROTOS = [
-@@ -265,6 +271,9 @@
+@@ -265,6 +274,9 @@ cc_proto_library(
  cc_binary(
      name = "js_embed",
      srcs = ["src/google/protobuf/compiler/js/embed.cc"],
@@ -31,7 +35,7 @@ diff -u -r a/BUILD b/BUILD
      visibility = ["//visibility:public"],
  )
  
-@@ -465,11 +474,13 @@
+@@ -465,11 +477,13 @@ cc_proto_library(
      default_runtime = ":protobuf",
      protoc = ":protoc",
      deps = [":cc_wkt_protos"],
@@ -45,7 +49,7 @@ diff -u -r a/BUILD b/BUILD
      "src/google/protobuf/map_test_util.cc",
      "src/google/protobuf/test_util.cc",
      "src/google/protobuf/testing/file.cc",
-@@ -487,8 +498,9 @@
+@@ -487,8 +501,9 @@ cc_binary(
      deps = [
          ":protobuf",
          ":protoc_lib",
@@ -56,7 +60,7 @@ diff -u -r a/BUILD b/BUILD
  )
  
  cc_test(
-@@ -496,7 +508,7 @@
+@@ -496,7 +511,7 @@ cc_test(
      srcs = ["src/google/protobuf/stubs/io_win32_unittest.cc"],
      deps = [
          ":protobuf_lite",
@@ -65,7 +69,7 @@ diff -u -r a/BUILD b/BUILD
      ],
      tags = ["manual", "windows"],
  )
-@@ -519,7 +531,6 @@
+@@ -519,7 +534,6 @@ cc_test(
          "src/google/protobuf/compiler/importer_unittest.cc",
          "src/google/protobuf/compiler/java/java_doc_comment_unittest.cc",
          "src/google/protobuf/compiler/java/java_plugin_unittest.cc",
@@ -73,7 +77,7 @@ diff -u -r a/BUILD b/BUILD
          "src/google/protobuf/compiler/objectivec/objectivec_helpers_unittest.cc",
          "src/google/protobuf/compiler/parser_unittest.cc",
          "src/google/protobuf/compiler/python/python_plugin_unittest.cc",
-@@ -577,7 +588,11 @@
+@@ -577,7 +591,11 @@ cc_test(
          "src/google/protobuf/well_known_types_unittest.cc",
          "src/google/protobuf/wire_format_unittest.cc",
      ],
@@ -86,7 +90,7 @@ diff -u -r a/BUILD b/BUILD
      data = [
          ":test_plugin",
      ] + glob([
-@@ -595,10 +610,11 @@
+@@ -595,10 +613,11 @@ cc_test(
          ":cc_test_protos",
          ":protobuf",
          ":protoc_lib",
@@ -99,7 +103,7 @@ diff -u -r a/BUILD b/BUILD
  ################################################################################
  # Java support
  ################################################################################
-@@ -615,6 +631,7 @@
+@@ -615,6 +634,7 @@ java_library(
      ],
      javacopts = ["-source 6", "-target 6"],
      visibility = ["//visibility:public"],
@@ -107,7 +111,7 @@ diff -u -r a/BUILD b/BUILD
  )
  
  java_library(
-@@ -629,6 +646,7 @@
+@@ -629,6 +649,7 @@ java_library(
          "//external:gson",
          "//external:guava",
      ],
@@ -115,7 +119,7 @@ diff -u -r a/BUILD b/BUILD
  )
  
  ################################################################################
-@@ -662,8 +680,8 @@
+@@ -662,8 +683,8 @@ cc_binary(
      linkshared = 1,
      linkstatic = 1,
      deps = select({
@@ -126,7 +130,7 @@ diff -u -r a/BUILD b/BUILD
      }),
  )
  
-@@ -675,6 +693,8 @@
+@@ -675,6 +696,8 @@ cc_binary(
      ]),
      copts = COPTS + [
          "-DGOOGLE_PROTOBUF_HAS_ONEOF=1",
@@ -135,7 +139,7 @@ diff -u -r a/BUILD b/BUILD
      ] + select({
          "//conditions:default": [],
          ":allow_oversize_protos": ["-DPROTOBUF_PYTHON_ALLOW_OVERSIZE_PROTOS=1"],
-@@ -688,8 +708,8 @@
+@@ -688,8 +711,8 @@ cc_binary(
      deps = [
          ":protobuf",
      ] + select({
@@ -146,7 +150,7 @@ diff -u -r a/BUILD b/BUILD
      }),
  )
  
-@@ -738,7 +758,7 @@
+@@ -738,7 +761,7 @@ py_proto_library(
      protoc = ":protoc",
      py_libs = [
          ":python_srcs",
@@ -155,7 +159,7 @@ diff -u -r a/BUILD b/BUILD
      ],
      srcs_version = "PY2AND3",
      visibility = ["//visibility:public"],
-@@ -840,6 +860,7 @@
+@@ -840,6 +863,7 @@ proto_lang_toolchain(
      command_line = "--java_out=$(OUT)",
      runtime = ":protobuf_java",
      visibility = ["//visibility:public"],
@@ -163,16 +167,17 @@ diff -u -r a/BUILD b/BUILD
  )
  
  OBJC_HDRS = [
-@@ -921,4 +942,5 @@
+@@ -921,4 +945,5 @@ objc_library(
      ],
      non_arc_srcs = OBJC_SRCS,
      visibility = ["//visibility:public"],
 +    tags = ["manual"],
  )
-diff -u -r a/protobuf.bzl b/protobuf.bzl
---- a/protobuf.bzl	2017-09-14 12:24:28.000000000 -0700
-+++ b/protobuf.bzl	2018-01-12 18:15:41.728871639 -0800
-@@ -70,6 +70,8 @@
+diff --git a/protobuf.bzl b/protobuf.bzl
+index 23380ba..ac93ddd 100644
+--- a/protobuf.bzl
++++ b/protobuf.bzl
+@@ -70,6 +70,8 @@ def _proto_gen_impl(ctx):
    deps += ctx.files.srcs
    source_dir = _SourceDir(ctx)
    gen_dir = _GenDir(ctx)
@@ -181,7 +186,7 @@ diff -u -r a/protobuf.bzl b/protobuf.bzl
    if source_dir:
      import_flags = ["-I" + source_dir, "-I" + gen_dir]
    else:
-@@ -225,7 +227,7 @@
+@@ -225,7 +227,7 @@ def cc_proto_library(
  
    grpc_cpp_plugin = None
    if use_grpc_plugin:
@@ -190,7 +195,7 @@ diff -u -r a/protobuf.bzl b/protobuf.bzl
  
    gen_srcs = _CcSrcs(srcs, use_grpc_plugin)
    gen_hdrs = _CcHdrs(srcs, use_grpc_plugin)
-@@ -247,7 +249,7 @@
+@@ -247,7 +249,7 @@ def cc_proto_library(
    if default_runtime and not default_runtime in cc_libs:
      cc_libs = cc_libs + [default_runtime]
    if use_grpc_plugin:
@@ -199,7 +204,18 @@ diff -u -r a/protobuf.bzl b/protobuf.bzl
  
    native.cc_library(
        name=name,
-@@ -352,7 +354,7 @@
+@@ -263,8 +265,8 @@ def internal_gen_well_known_protos_java(srcs):
+   Args:
+     srcs: the well known protos
+   """
+-  root = Label("%s//protobuf_java" % (REPOSITORY_NAME)).workspace_root
+-  pkg = PACKAGE_NAME + "/" if PACKAGE_NAME else ""
++  root = Label("%s//protobuf_java" % (native.repository_name())).workspace_root
++  pkg = native.package_name() + "/" if native.package_name() else ""
+   if root == "":
+     include = " -I%ssrc " % pkg
+   else:
+@@ -352,7 +354,7 @@ def py_proto_library(
  
    grpc_python_plugin = None
    if use_grpc_plugin:
@@ -208,10 +224,11 @@ diff -u -r a/protobuf.bzl b/protobuf.bzl
      # Note: Generated grpc code depends on Python grpc module. This dependency
      # is not explicitly listed in py_libs. Instead, host system is assumed to
      # have grpc installed.
-diff -u -r a/python/google/protobuf/internal/test_util.py b/python/google/protobuf/internal/test_util.py
---- a/python/google/protobuf/internal/test_util.py	2017-09-14 12:24:28.000000000 -0700
-+++ b/python/google/protobuf/internal/test_util.py	2018-01-31 13:13:39.192688661 -0800
-@@ -598,6 +598,8 @@
+diff --git a/python/google/protobuf/internal/test_util.py b/python/google/protobuf/internal/test_util.py
+index 269d0e2..7d8bde5 100755
+--- a/python/google/protobuf/internal/test_util.py
++++ b/python/google/protobuf/internal/test_util.py
+@@ -598,6 +598,8 @@ def GoldenFile(filename):
  
    # Search up the directory tree looking for the C++ protobuf source code.
    path = '.'
@@ -220,10 +237,11 @@ diff -u -r a/python/google/protobuf/internal/test_util.py b/python/google/protob
    while os.path.exists(path):
      if os.path.exists(os.path.join(path, 'src/google/protobuf')):
        # Found it.  Load the golden file from the testdata directory.
-diff -u -r a/src/google/protobuf/testing/googletest.cc b/src/google/protobuf/testing/googletest.cc
---- a/src/google/protobuf/testing/googletest.cc	2017-09-14 12:24:28.000000000 -0700
-+++ b/src/google/protobuf/testing/googletest.cc	2018-01-31 13:14:09.004313247 -0800
-@@ -85,6 +85,9 @@
+diff --git a/src/google/protobuf/testing/googletest.cc b/src/google/protobuf/testing/googletest.cc
+index 33a75ed..1a41ab8 100644
+--- a/src/google/protobuf/testing/googletest.cc
++++ b/src/google/protobuf/testing/googletest.cc
+@@ -85,6 +85,9 @@ string TestSourceDir() {
  
    // Look for the "src" directory.
    string prefix = ".";

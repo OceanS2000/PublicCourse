@@ -3,7 +3,7 @@ workspace(name = "ponyai_public_course")
 load("//utils/bazel:pony_http_archive.bzl", "pony_http_archive")
 
 # gtest
-new_http_archive(
+pony_http_archive(
     name = "googletest",
     build_file = "utils/bazel/googletest.BUILD",
     sha256 = "58a6f4277ca2bc8565222b3bbd58a177609e9c488e8a72649359ba51450db7d8",
@@ -12,7 +12,7 @@ new_http_archive(
 )
 
 # glog
-new_http_archive(
+pony_http_archive(
     name = "glog",
     build_file = "utils/bazel/glog.BUILD",
     sha256 = "7580e408a2c0b5a89ca214739978ce6ff480b5e7d8d7698a2aa92fadc484d1e0",
@@ -21,7 +21,7 @@ new_http_archive(
 )
 
 # gflags
-http_archive(
+pony_http_archive(
     name = "gflags",
     sha256 = "ae27cdbcd6a2f935baa78e4f21f675649271634c092b1be01469440495609d0e",
     strip_prefix = "gflags-2.2.1",
@@ -29,7 +29,7 @@ http_archive(
 )
 
 # eigen
-new_http_archive(
+pony_http_archive(
     name = "eigen",
     build_file = "utils/bazel/eigen.BUILD",
     sha256 = "4286e8f1fabbd74f7ec6ef8ef31c9dbc6102b9248a8f8327b04f5b68da5b05e1",
@@ -38,7 +38,7 @@ new_http_archive(
 )
 
 # boost
-new_http_archive(
+pony_http_archive(
     name = "boost",
     build_file = "utils/bazel/boost.BUILD",
     sha256 = "a004d9b3fa95e956383693b86fce1b68805a6f71c2e68944fa813de0fb8c8102",
@@ -72,7 +72,7 @@ pony_http_archive(
 )
 
 # GLM
-new_http_archive(
+pony_http_archive(
     name = "glm",
     build_file = "utils/bazel/glm.BUILD",
     sha256 = "9f9f520ec7fb8c20c69d6b398ed928a2448c6a3245cbedb8631a56a987c38660",
@@ -90,7 +90,7 @@ new_local_repository(
 )
 
 # png
-new_http_archive(
+pony_http_archive(
     name = "png",
     build_file = "utils/bazel/png.BUILD",
     sha256 = "d5bc743ac338bd454e330279f70534f5a31ea4c2cd3ee3ce76fd6e7f17fd3950",
@@ -101,7 +101,7 @@ new_http_archive(
 )
 
 # jpeg-turbo
-new_http_archive(
+pony_http_archive(
     name = "jpeg_turbo",
     build_file = "utils/bazel/jpeg-turbo.BUILD",
     sha256 = "1a17020f859cb12711175a67eab5c71fc1904e04b587046218e36106e07eabde",
@@ -112,7 +112,7 @@ new_http_archive(
 )
 
 # zlib
-new_http_archive(
+pony_http_archive(
     name = "zlib",
     build_file = "utils/bazel/zlib.BUILD",
     sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
@@ -123,7 +123,7 @@ new_http_archive(
 )
 
 # fmt
-new_http_archive(
+pony_http_archive(
     name = "fmt",
     build_file = "utils/bazel/fmt.BUILD",
     sha256 = "46628a2f068d0e33c716be0ed9dcae4370242df135aed663a180b9fd8e36733d",
@@ -144,3 +144,4 @@ pony_http_archive(
     ],
     strip_prefix = "nanoflann-1.2.3",
 )
+

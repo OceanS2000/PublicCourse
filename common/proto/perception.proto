@@ -7,6 +7,9 @@ import "common/proto/map_traffic_light.proto";
 import "common/proto/map_id.proto";
 
 enum ObjectType {
+  NO_LABEL_ZONE = -1;
+  NOISE_ZONE = -2;
+  AMBIGUOUS_IN_NOISE_ZONE = -3;
   UNKNOWN_TYPE = 0;
   CAR = 1;
   PEDESTRIAN = 2;
@@ -28,6 +31,9 @@ message PerceptionObstacle {
 
   // heading in the world coordinate system.
   optional double heading = 3;
+
+  // The speed of the obstacle.
+  optional double speed = 99;
 
   // Height of the obstacle, in meters.
   optional double height = 7;

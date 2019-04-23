@@ -63,7 +63,10 @@ config_setting(
 cc_toolchain_suite(
     name = "default",
     toolchains = {
-        "local|compiler": ":cc-compiler-local",
+        # Bazel 0.18.1 and earlier versions use the following line.
+        "k8|compiler": ":cc-compiler-local",
+        # Bazel 0.23.2 requires the following line.
+        "k8": ":cc-compiler-local",
     },
 )
 
@@ -79,6 +82,7 @@ cc_toolchain(
     static_runtime_libs = [":empty"],
     strip_files = ":empty",
     supports_param_files = 1,
+    toolchain_identifier = "local_linux",
 )
 
 filegroup(name = "toolchain_category")

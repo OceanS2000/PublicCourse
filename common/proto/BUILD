@@ -74,13 +74,6 @@ cc_proto_library(
     ],
 )
 
-cc_proto_library(
-    name = "cc_perception_evaluation_proto",
-    deps = [
-        ":perception_evaluation_proto",
-    ],
-)
-
 proto_library(
     name = "perception_proto",
     srcs = ["perception.proto"],
@@ -91,10 +84,18 @@ proto_library(
     ],
 )
 
+cc_proto_library(
+    name = "cc_perception_evaluation_proto",
+    deps = [
+        ":perception_evaluation_proto",
+    ],
+)
+
 proto_library(
     name = "perception_evaluation_proto",
     srcs = ["perception_evaluation.proto"],
     deps = [
+        ":perception_proto",
         ":geometry_proto",
     ],
 )

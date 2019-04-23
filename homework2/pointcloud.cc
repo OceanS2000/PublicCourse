@@ -6,7 +6,7 @@
 
 #include <glog/logging.h>
 
-PointCloud ReadPointCloudFromTextFile(const std::string& file_name) {
+PointCloud ReadPointCloudFromTextFile(const std::string& file_name, bool with_roi) {
   FILE* file = std::fopen(file_name.c_str(), "r");
   CHECK(file != nullptr) << "Fail to open file " << file_name;
 
@@ -25,9 +25,22 @@ PointCloud ReadPointCloudFromTextFile(const std::string& file_name) {
 
   Eigen::Vector3d point = Eigen::Vector3d::Zero();
   int point_index = 0;
-  while (std::fscanf(file, "%d,%lf,%lf,%lf\n",
-                     &point_index, &point(0), &point(1), &point(2)) != EOF) {
-    pointcloud.points.emplace_back(point);
+  char is_in_roi[10] = "";
+  if (with_roi) {
+    while (std::fscanf(file, "%d,%lf,%lf,%lf,%s\n", &point_index, &point(0),
+                       &point(1), &point(2), is_in_roi) != EOF) {
+      pointcloud.points.emplace_back(point);
+      if (strcmp(is_in_roi, "true") == 0) {
+        pointcloud.is_in_roi.push_back(true);
+      } else {
+        pointcloud.is_in_roi.push_back(false);
+      }
+    }
+  } else {
+    while (std::fscanf(file, "%d,%lf,%lf,%lf\n",
+                      &point_index, &point(0), &point(1), &point(2)) != EOF) {
+      pointcloud.points.emplace_back(point);
+    }
   }
   std::fclose(file);
 
