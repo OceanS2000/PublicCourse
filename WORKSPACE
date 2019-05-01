@@ -90,15 +90,20 @@ new_local_repository(
 )
 
 # png
-pony_http_archive(
+new_local_repository(
     name = "png",
-    build_file = "utils/bazel/png.BUILD",
-    sha256 = "d5bc743ac338bd454e330279f70534f5a31ea4c2cd3ee3ce76fd6e7f17fd3950",
-    strip_prefix = "libpng-1.2.59",
-    urls = [
-        "https://github.com/glennrp/libpng/archive/v1.2.59.tar.gz",
-    ],
+    build_file = "utils/bazel/png_local.BUILD",
+    path = "/usr",
 )
+#pony_http_archive(
+#    name = "png",
+#    build_file = "utils/bazel/png.BUILD",
+#    sha256 = "d5bc743ac338bd454e330279f70534f5a31ea4c2cd3ee3ce76fd6e7f17fd3950",
+#    strip_prefix = "libpng-1.2.59",
+#    urls = [
+#        "https://github.com/glennrp/libpng/archive/v1.2.59.tar.gz",
+#    ],
+#)
 
 # jpeg-turbo
 pony_http_archive(
@@ -139,9 +144,8 @@ pony_http_archive(
     build_file = "utils/bazel/nanoflann.BUILD",
     patch_file = "utils/bazel/nanoflann.patch",
     sha256 = "5ef4dfb23872379fe9eb306aabd19c9df4cae852b72a923af01aea5e8d7a59c3",
+    strip_prefix = "nanoflann-1.2.3",
     urls = [
         "https://github.com/jlblancoc/nanoflann/archive/v1.2.3.tar.gz",
     ],
-    strip_prefix = "nanoflann-1.2.3",
 )
-

@@ -11,3 +11,4 @@ targets:
   //homework2/rotation:rotation_test
   //homework2/chessboard:opencv_example
   //homework3:single_frame_detector_main
+  //homework4:map_visualizer_main
