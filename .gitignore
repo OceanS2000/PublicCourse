@@ -5,3 +5,4 @@ bazel-*
 cmake-build-debug
 CMakeLists.txt
 .clang-format
+compile_commands.json
