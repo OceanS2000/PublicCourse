@@ -77,7 +77,7 @@ The `AgentStatus` is the proto object that represents the complete status that a
 
 The `SampleVehicleAgent` is registered into an agent factory in `homework5/agents/agents.cc` with a static variable. When you implement your own agent, you also need to register the class in this file with your agent's type name. 
 
-The config file `homework5/data/routes/simulation_config_1.txt` defines the simulation task which the agent needs to finish. It contains the agent's type name, instance name (could be any string) and the `start_point`/`end_point` of the route. The agent starts from the start_point, and needs to reach the destination in static state. When you start to run simulation with your own agent, you need to change the agent_type to your own agent's type name, the same as the registered name in `homework5/agents/agents.cc`. The criteria of 
+The config file `homework5/data/routes/simulation_config_1.txt` defines the simulation task which the agent needs to finish. It contains the agent's type name, instance name (could be any string) and the `start_point`/`end_point` of the route. The agent starts from the start_point, and needs to reach the destination in static state. When you start to run simulation with your own agent, you need to change the agent_type to your own agent's type name, the same as the registered name in `homework5/agents/agents.cc`. The criteria of reaching destination can be found in `DetermineReachedDestination` in simulation/simulation_world.cc
 
 ### 2. Control your vehicle in a straight lane. 
 
