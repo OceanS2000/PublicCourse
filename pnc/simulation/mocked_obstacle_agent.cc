@@ -81,7 +81,7 @@ std::vector<math::Box2d> MockedObstacleAgent::RunOneIteration(
       math::Box2d vehicle_box = utils::vehicle::GetVehicleBox(vehicle_status, vehicle_params_);
       for (const auto& future_center : future_centers) {
         if (vehicle_box.HasOverlapWithBox(
-                math::Box2d(future_center, headings_[i], kLength + 0.1, kWidth + 0.1))) {
+                math::Box2d(future_center, headings_[i], kLength + 0.3, kWidth + 0.3))) {
           near_vehicle = true;
           break;
         }

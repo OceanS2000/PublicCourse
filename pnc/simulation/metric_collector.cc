@@ -4,6 +4,8 @@
 
 #include "pnc/utils/vehicle_status_helper.h"
 
+#include <iomanip>
+
 namespace simulation {
 
 void MetricCollector::AddMetricFrame(const interface::agent::AgentStatus& agent_status) {
@@ -38,10 +40,13 @@ void MetricCollector::AddMetricFrame(const interface::agent::AgentStatus& agent_
   if (frame_count_ > 2) {
     math::Vec2d last_last_pos(last_last_vehicle_status_.position().x(),
                               last_last_vehicle_status_.position().y());
+    math::Vec2d last_last_velocity(last_last_vehicle_status_.velocity().x(), last_last_vehicle_status_.velocity().y());
     math::Vec2d last_pos(last_vehicle_status_.position().x(), last_vehicle_status_.position().y());
     math::Vec2d current_pos(vehicle_status.position().x(), vehicle_status.position().y());
+    math::Vec2d last_velocity(last_vehicle_status_.velocity().x(), last_vehicle_status_.velocity().y());
     math::Vec2d current_velocity(vehicle_status.velocity().x(), vehicle_status.velocity().y());
-    if (current_velocity.Length() > 0.1) {
+    // avoid the impact by random noise
+    if (last_last_velocity.Length() > 1.0 && last_velocity.Length() > 1.0 && current_velocity.Length() > 1.0) {
       curvature_sqr_sum_ += math::CurvatureSqr(last_last_pos, last_pos, current_pos);
     }
   }

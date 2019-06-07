@@ -7,7 +7,7 @@ be evaluated by using the metrics taught in the lecture.
 ## Goal
 Implement the function `interface::perception::PerceptionObstacles Perception::OneIteration(const PointCloud& pointcloud)`
 in `perception.cc`. The inputs is the pointcloud from our lidar. Your outputs should be all detected objects within certain range and organized by using
-protobuf `interface::perception::PerceptionObstacles`, which you should already know well in Homework3. Note that in this project, you will need to output the type and velocity as well. Velocity is represented by speed and heading. That is on the xy plane, the velocity is (speed * cos(heading), speed * sin(heading)).
+protobuf `interface::perception::PerceptionObstacles`, which you should already know well in Homework3. Note that in this project, you will need to output the type and velocity as well. Velocity is represented by speed and heading. That is on the xy plane, the velocity is (speed * cos(heading), speed * sin(heading)). Note that the time difference between two adjusted frames is 0.1s.
 The detection range in evaluation is defined as 30m in a given ROI (region of interest), which means even you missed all objects beyond 30m or most than half points of it are outside ROI, your evaluation score will 
 not be affected at all, Hooray!
 For k-th laser_point in pointcloud, you can find whether it is in roi by querying is_in_roi[k] in pointcloud. If it is true, the point is in ROI, otherwise, it isn't. An obstacle will only be considered in evaluation if it is mostly in ROI.

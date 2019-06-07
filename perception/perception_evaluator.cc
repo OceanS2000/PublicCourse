@@ -174,7 +174,6 @@ PerceptionFrameResult PerceptionEvaluator::RunEvaluationOnFrame(
     if (label_type == detect_type) {
       tp[label_type]++;
     }
-    label_count[label_type]++;
   }
   for (auto& detected_obstacle : filtered_detected_obstacles) {
     detect_count[detected_obstacle.type]++;
