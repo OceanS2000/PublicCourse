@@ -14,3 +14,5 @@ targets:
   //homework4:map_visualizer_main
   //homework4:map_filler
   //homework4:map_router
+  //pnc:simulation_main
+  //pnc:replay_main
