@@ -41,8 +41,8 @@ config_setting(
 config_setting(
     name = "asan_enabled",
     values = {
-        'copt': '-fsanitize=address'
-    }
+        "copt": "-fsanitize=address",
+    },
 )
 
 config_setting(
@@ -56,7 +56,7 @@ config_setting(
     name = "remote_cache_disabled",
     define_values = {
         "enable_remote_cache": "false",
-    }
+    },
 )
 
 # Hardcoded toolchain, legacy behaviour.
@@ -70,6 +70,10 @@ cc_toolchain_suite(
     },
 )
 
+# load(":compiler_local_config.bzl", "cc_toolchain_config")
+
+# cc_toolchain_config(name = "compiler_local_config")
+
 cc_toolchain(
     name = "cc-compiler-local",
     all_files = ":empty",
@@ -82,6 +86,7 @@ cc_toolchain(
     static_runtime_libs = [":empty"],
     strip_files = ":empty",
     supports_param_files = 1,
+    #  toolchain_config = ":compiler_local_config",
     toolchain_identifier = "local_linux",
 )
 
