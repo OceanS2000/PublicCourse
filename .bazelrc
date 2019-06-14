@@ -8,8 +8,8 @@ build --experimental_sandbox_base=/dev/shm
 build --action_env=PATH="/bin:/usr/bin"
 run --action_env=SVGA_VGPU10=0
 run --action_env=PONY_ROOT=/home/ocean/PublicCourse
-run --test_env=PONY_ROOT=/home/ocean/PublicCourse
 run --test_env=SVGA_VGPU10=0
+run --test_env=PONY_ROOT=/home/ocean/PublicCourse
 build --crosstool_top=//common/toolchain:default
 build --jobs 8 --ram_utilization_factor 50
 
