@@ -30,6 +30,7 @@ class SaoVehicleAgent : public simulation::VehicleAgent {
  public:
   explicit SaoVehicleAgent(const std::string& name)
     : VehicleAgent(name), vec_pid_(10, -10, iteration_time), wheel_pid_(10, -10, iteration_time) {
+    green_counter_ = 0;
     vec_pid_.Tone(V::P, V::I, V::D);
     wheel_pid_.Tone(W::P, W::I, W::D);
     wheel_pid_.SetGoal(0.0);
@@ -40,7 +41,7 @@ class SaoVehicleAgent : public simulation::VehicleAgent {
       current_route_ = FindRoute(status.vehicle_status().position(),
                                  status.route_status().destination());
     map_index_ = std::make_unique<sao_agent::MapIndex>(map_lib().map_proto());
-    history_ = std::make_unique<std::vector<VehicleStatus> >();
+    history_ = std::make_unique<std::vector<PerceptionStatus> >();
   }
 
   interface::control::ControlCommand RunOneIteration(
@@ -65,8 +66,9 @@ class SaoVehicleAgent : public simulation::VehicleAgent {
                                    double dest_x, double dest_y);
   std::unique_ptr<MapIndex> map_index_;
   std::unique_ptr<Route> current_route_;
+  std::unique_ptr<math::Vec3d> current_destination_;
 
-  using VehicleHistory = std::vector<VehicleStatus>;
+  using VehicleHistory = std::vector<PerceptionStatus>;
   std::unique_ptr<VehicleHistory> history_;
 
   PID vec_pid_, wheel_pid_;

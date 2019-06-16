@@ -13,12 +13,14 @@ constexpr double vec_hard_limit = kmh_to_ms(50);
 constexpr double throttle_limit = 0.2999;
 constexpr double checkpoint_threshold = 5.0;
 constexpr double iteration_time = 0.01;
-constexpr double goal_near_threshold = 11.5;
-constexpr int greenlight_pass_time = 1000;
+constexpr double goal_near_slowdown_threshold(double vec) {
+  return (vec * vec) / (2 * throttle_limit);}
+constexpr double goal_near_threshold = 1.5;
+constexpr int greenlight_pass_time = 800;
 
 namespace V {
 constexpr double P = 0.1;
-constexpr double I = 0.08;
+constexpr double I = 0.01;
 constexpr double D = 0.02;
 }  // namespace V
 namespace W {

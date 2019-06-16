@@ -26,6 +26,9 @@ class MapIndex {
   }
 
   int GetPointLane(double x, double y);
+  int GetPointLane(const interface::geometry::Vector3d& p) {
+    return GetPointLane(p.x(), p.y());
+  }
   int GetPointLane(const math::Vec2d& point) {
     return GetPointLane(point.x, point.y);
   }

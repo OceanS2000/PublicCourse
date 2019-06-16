@@ -20,31 +20,38 @@ SaoVehicleAgent::FindRoute(double start_x, double start_y, double dest_x,
   auto route = std::make_unique<Route>();
   auto start_lane = map_index_->GetPointLane(start_x, start_y);
   auto dest_lane = map_index_->GetPointLane(dest_x, dest_y);
+  current_destination_ = std::make_unique<math::Vec3d>(dest_x, dest_y, 0.0);
 
   route->push_back(Point2D(dest_x, dest_y));
-  if (start_lane == dest_lane) {
-    route->push_back(Point2D(start_x, start_y));
-    return route;
-  }
+  //  if (start_lane == dest_lane) {
+  //  route->push_back(Point2D(start_x, start_y));
+  //  return route;
+  //}
 
   std::queue<int> search;
   std::map<int, int> route_lane;
-  route_lane[start_lane] = -1;
+  std::map<int, bool> inqueue;
   search.push(start_lane);
   while (!search.empty()) {
     int cur = search.front();
     search.pop();
-    if (cur == dest_lane) break;
 
     for (const auto nxt : map_index_->LaneSucc(cur)) {
-      if (route_lane.find(nxt) == route_lane.end()) {
+      if (inqueue.find(dest_lane) != inqueue.end()) break;
+      if (inqueue.find(nxt) == inqueue.end()) {
         route_lane[nxt] = cur;
         search.push(nxt);
+        inqueue[nxt] = true;
       }
     }
   }
 
-  for (int cur = dest_lane; cur != start_lane; cur = route_lane[cur]) {
+  int cur = dest_lane;
+  if (cur == start_lane) {
+    const auto& lane_start = map.lane(cur).central_line().point(0);
+    route->push_back(Point2D(lane_start));
+    cur = route_lane[cur]; }
+  for (; cur != start_lane; cur = route_lane[cur]) {
     if (cur == dest_lane) {
       const auto& lane_start = map.lane(cur).central_line().point(0);
       route->push_back(Point2D(lane_start));
@@ -65,7 +72,7 @@ interface::control::ControlCommand SaoVehicleAgent::RunOneIteration(
   const VehicleStatus& current_vcs = agent_status.vehicle_status();
   const PerceptionStatus& current_pes = agent_status.perception_status();
 
-  history_->push_back(agent_status.vehicle_status());
+  history_->push_back(current_pes);
   if (history_->size() > history_length) history_->erase(history_->begin());
 
   if (agent_status.route_status().is_new_request())
@@ -74,6 +81,10 @@ interface::control::ControlCommand SaoVehicleAgent::RunOneIteration(
 
   const auto& current_pos = agent_status.vehicle_status().position();
   const auto& current_route_p = *(--current_route_->end());
+  const auto& current_lane = map_index_->GetMap()
+                                 .lane(map_index_->GetPointLane(current_pos))
+                                 .central_line();
+
   PublishVariable("checkpoint_distance",
                   std::to_string(Distance(current_pos, current_route_p)));
   if (Distance(current_pos, current_route_p) < checkpoint_threshold &&
@@ -102,9 +113,10 @@ interface::control::ControlCommand SaoVehicleAgent::RunOneIteration(
       for (const auto& light : current_pes.traffic_light()) {
         for (const auto& slight : light.single_traffic_light_status())
           if (slight.id().id() == rele_traffic_light->id().id()) {
-            if (slight.color() == interface::map::Bulb::RED)
+            if (slight.color() != interface::map::Bulb::GREEN)
               desired_vec = -10.0;
-            else
+            else if (Distance(current_pos, *(--current_lane.point().cend())) <
+                     1)
               green_counter_ = greenlight_pass_time;
           }
       }
@@ -113,8 +125,53 @@ interface::control::ControlCommand SaoVehicleAgent::RunOneIteration(
   ////////////////////////////////////////////////////////////////////////
 
   ///////////////////////// Obstacles ////////////////////////////////////
+  math::Vec3d current_pos_ = Vec3d(current_pos);
+  math::Vec3d current_vec_ = Vec3d(current_vcs.velocity());
+  math::Vec3d current_vec_orth = current_vec_.OuterProd(math::Vec3d(0, 0, 1));
+  current_vec_.Normalize();
+  math::Vec3d current_critical_pos = current_pos_ + (current_vec*0.02) * current_vec_;
+  for (const auto& object : current_pes.obstacle()) {
+    std::vector<interface::geometry::Point3D> object_points;
+    for (const auto& p : object.polygon_point()) object_points.push_back(p);
+    math::Vec3d object_center = Center(object_points);
+    math::Vec3d object_diff = object_center - current_pos_;
+    double object_x = object_diff.InnerProd(current_vec_);
+    double object_y = object_diff.InnerProd(current_vec_orth);
+    double critical_distance = object_center.DistanceToPoint(current_critical_pos);
 
+    if (object.type() == interface::perception::CAR) {
+      PublishVariable("Car", object.id());
+      if ((object_y < 20) && (object_y > -1) && (object_x < 40)) {
+        if (object_x < 0) {
+          PublishVariable("Decision", "behind");
+          continue;
+        }
+        if (rele_traffic_light != utils::none) {
+          desired_vec = -10.0;
+          PublishVariable("Decision", "at crossing");
+        }
+        if (object_x > 15) {
+          desired_vec = std::min(-2.0, desired_vec);
+          PublishVariable("Decision", "slowing");
+        } else {
+          desired_vec = -20.0;
+          PublishVariable("Decision", "brake");
+        }
+      }
+    } else {
+      // Normal obstacles
+      if (critical_distance < 20.0) desired_vec = std::min(-1.0, desired_vec);
+      if (critical_distance < 10.0) desired_vec = std::min(-10.0, desired_vec);
+    }
+  }
   ////////////////////////////////////////////////////////////////////////
+
+  math::Vec3d dest_diff = *current_destination_ - current_pos_;
+  double dest_distance = dest_diff.InnerProd(current_vec_);
+  if (( dest_distance < 50 ) && ( dest_distance > 0 )) {
+    desired_vec = std::min(0.3, desired_vec);
+    PublishVariable("car state", "near dest");
+  }
 
   vec_pid_.SetGoal(desired_vec);
   double desired_acc = vec_pid_.RunOneIteration(current_vec);
@@ -134,9 +191,9 @@ interface::control::ControlCommand SaoVehicleAgent::RunOneIteration(
 
   double head_sin = CrossProd(current_vcs.velocity(), desired_head);
   double desired_wheel;
-  if (false)
-    desired_wheel = wheel_pid_.RunOneIteration(0.0);
-  else
+  //if (false)
+  //  desired_wheel = wheel_pid_.RunOneIteration(0.0);
+  //else
     desired_wheel = wheel_pid_.RunOneIteration(head_sin);
   res.set_steering_angle(-desired_wheel);
   PublishVariable("rotate", std::to_string(desired_wheel));

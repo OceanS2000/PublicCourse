@@ -67,6 +67,9 @@ inline interface::geometry::Point2D Point2D(double x, double y) {
   res.set_y(y);
   return res;
 }
+inline math::Vec3d Vec3d(const interface::geometry::Vector3d& p) {
+  return math::Vec3d(p.x(), p.y(), p.z());
+}
 
 inline double Norm(double x, double y) { return std::sqrt(x * x + y * y); }
 inline double Norm(double x, double y, double z) {
@@ -90,6 +93,15 @@ inline double Distance(const interface::geometry::Vector3d& u,
 inline double Distance(const interface::geometry::Vector3d& u,
                        const interface::geometry::Point3D& v) {
   return Norm(u.x() - v.x(), u.y() - v.y());
+}
+inline math::Vec3d Center(const std::vector<interface::geometry::Point3D>& ps) {
+  int sz = ps.size();
+  double x = 0.0, y = 0.0;
+  for (const auto& p : ps) {
+    x += p.x();
+    y += p.y();
+  }
+  return math::Vec3d(x / sz, y / sz, 0.0);
 }
 }  // namespace sao_agent
 

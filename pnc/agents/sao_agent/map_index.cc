@@ -224,7 +224,7 @@ Optional<TrafficLight> MapIndex::GetRelevantTrafficLight(double x, double y) {
       }
     }
   }
-  if (min_dis > 13.5) return utils::none;
+  if (min_dis > 15) return utils::none;
   return result;
 }
 }  // namespace sao_agent
