@@ -3,11 +3,12 @@
 // Many of map_meta.cc is copied here since we need more data about the map.
 //
 
-#ifndef PUBLICCOURSE_MAP_INDEX_H
-#define PUBLICCOURSE_MAP_INDEX_H
+#ifndef PUBLICCOURSE_SAO_MAP_INDEX_H
+#define PUBLICCOURSE_SAO_MAP_INDEX_H
 
 #include "common/proto/geometry.pb.h"
 #include "common/proto/map.pb.h"
+#include "common/proto/transform.pb.h"
 #include "common/utils/common/optional.h"
 #include "common/utils/index/grid_index.h"
 #include "pnc/map/segment.h"
@@ -40,6 +41,11 @@ class MapIndex {
   Optional<pnc::map::Segment> GetNearestSegment(double x, double y);
   Optional<interface::map::TrafficLight> GetRelevantTrafficLight(double x,
                                                                  double y);
+
+  Optional<interface::map::TrafficLight> GetRelevantTrafficLight(
+      const interface::geometry::Vector3d& p) {
+    return GetRelevantTrafficLight(p.x(), p.y());
+  }
 
  protected:
   void BuildLaneMap();
@@ -74,4 +80,4 @@ class MapIndex {
 };
 }  // namespace sao_agent
 
-#endif  // PUBLICCOURSE_MAP_INDEX_H
+#endif  // PUBLICCOURSE_SAO_MAP_INDEX_H

@@ -203,8 +203,12 @@ void MapIndex::GetMinMaxValue() {
 // }
 
 Optional<TrafficLight> MapIndex::GetRelevantTrafficLight(double x, double y) {
+  const auto& current_lane = map_.lane(GetPointLane(x, y)).central_line();
+  int sz = current_lane.point_size();
+  double x_ = current_lane.point(sz - 1).x();
+  double y_ = current_lane.point(sz - 1).y();
   std::vector<const TrafficLightVector*> vec_segments =
-      traffic_light_index_->GetAllInCircle(x, y, 5.0);
+      traffic_light_index_->GetAllInCircle(x_, y_, 1.0);
   Optional<TrafficLight> result = utils::none;
   double min_dis = std::numeric_limits<double>::max();
   for (const TrafficLightVector* v : vec_segments) {
@@ -220,6 +224,7 @@ Optional<TrafficLight> MapIndex::GetRelevantTrafficLight(double x, double y) {
       }
     }
   }
+  if (min_dis > 13.5) return utils::none;
   return result;
 }
 }  // namespace sao_agent

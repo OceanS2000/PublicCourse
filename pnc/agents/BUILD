@@ -6,7 +6,7 @@ cc_library(
     hdrs = ["agents.h"],
     deps = [
         "//pnc/agents/sample:sample_agent",
-        "//pnc/agents/sao_agent",
+        "//pnc/agents/sao_agent:sao_agent",
         "//pnc/simulation:vehicle_agent_factory",
     ],
     alwayslink = 1,
